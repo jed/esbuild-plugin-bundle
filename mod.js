@@ -1,14 +1,14 @@
-export default build => ({
+export default {
   name: 'bundle',
 
-  setup: ({initialOptions, onResolve, onLoad}) => {
+  setup: ({initialOptions, onResolve, onLoad, esbuild}) => {
     onResolve({filter: /[?&]bundle\b/}, ({path, importer}) => {
       let {pathname} = new URL(path, `file://${importer}`)
       return {namespace: 'bundle', path: pathname}
     })
 
     onLoad({filter: /.*/, namespace: 'bundle'}, async ({path}) => {
-      let {outputFiles, metafile} = await build({
+      let {outputFiles, metafile} = await esbuild.build({
         ...initialOptions,
         entryPoints: [path],
         bundle: true,
@@ -29,4 +29,4 @@ export default build => ({
       return {loader: 'json', contents, watchFiles}
     })
   }
-})
+}
