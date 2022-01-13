@@ -14,7 +14,8 @@ export default {
         bundle: true,
         write: false,
         metafile: true,
-        outdir: '/'
+        outdir: '/',
+        outfile: undefined
       })
 
       let watchFiles = Object.keys(metafile.inputs)
