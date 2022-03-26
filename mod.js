@@ -20,8 +20,15 @@ export default {
 
       let watchFiles = Object.keys(metafile.inputs)
       let entries = outputFiles.map(x => [x.path, x.text])
-      let contents = JSON.stringify(Object.fromEntries(entries))
-      return {loader: 'json', contents, watchFiles}
+      let source = entries.find(x => x[0].endsWith('.js'))?.[1]
+      let map = entries.find(x => x[0].endsWith('.js.map'))?.[1]
+
+      let contents =
+        `export default ${JSON.stringify(Object.fromEntries(entries))};` +
+        `export const source=${JSON.stringify(source)};` +
+        `export const map=${JSON.stringify(map)};`
+
+      return {loader: 'js', contents, watchFiles}
     })
   }
 }
